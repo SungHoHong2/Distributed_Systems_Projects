@@ -5,10 +5,9 @@ import sys
 import time
 import eventcounter
 
-""" Program to simulate, how Lamport Clocks work. This file contains the main and uses classes EventCounter and LNode."""
-
+# arguments [hosts.txt], [Current Node Number]
 if len(sys.argv) < 2:
-	print("Usage: program congfiguration_file line")
+	print("Usage: program configuration_file line")
 	sys.exit()
 
 conf_file = sys.argv[1]
@@ -19,7 +18,6 @@ nodes = {}
 events = eventcounter.EventCounter()
 
 curr_host = int(sys.argv[2])
-
 
 for idx, line in enumerate(hosts):
 	l = line.split()
