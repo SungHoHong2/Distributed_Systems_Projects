@@ -39,7 +39,7 @@ class LNode:
 
 	def localEvent(self):
 		""" Have a simulated local event, increase Lamport clock by a random amount (1-5). """
-		self.clock.incrementRandom()
+		self.clock.increment()
 		self.events.increment()
 
 		print("lclock",self.clock.getValue())

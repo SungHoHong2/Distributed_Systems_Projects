@@ -9,6 +9,7 @@ import threading
 
 class EventCounter:
 	"""
+	EventCounter
 	Increment the event counter if
 	a) local event happens,
 	b) sends message to target node
