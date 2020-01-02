@@ -49,8 +49,6 @@ thisListener = thisnode.listen()
 
 # p0 : a s1 r3 b
 if curr_host == 0:
-	print("FRISK:",curr_host, nodes)
-
 	# a
 	# create local event
 	thisnode.localEvent()
@@ -74,8 +72,6 @@ if curr_host == 0:
 
 # p1 : c r2 s3
 elif curr_host == 1:
-	print("CHARA:",nodes)
-
 	# c
 	# create local event
 	thisnode.localEvent()
@@ -95,8 +91,6 @@ elif curr_host == 1:
 
 # p2 : r1 d s2 e
 elif curr_host == 2:
-	print("ASRIEL:",nodes)
-
 	# r1
 	# receive message
 	thisListener.recieveMsg()
