@@ -1,7 +1,7 @@
 git config credential.helper store
 git pull origin master
-HOSTS="$(cat /etc/hostname)"
-LOCATION="$(pwd)"
+#HOSTS="$(cat /etc/hostname)"
+#LOCATION="$(pwd)"
 
 if [ "$1" = "commit" ]
 then
