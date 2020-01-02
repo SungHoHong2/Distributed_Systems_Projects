@@ -12,7 +12,7 @@ Basic implementations comprises of the fundamental examples that is used to impl
     - [x] [benchmark for logical clock](lamportBenchmark) 
     - [x] [implementation of logical clock for independent processes](lamportClocks)
 
-- ### Consistency Models 
+- #### Consistency Models 
     - [ ] TBC 
      
  
