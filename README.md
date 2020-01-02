@@ -1,9 +1,10 @@
 # Distributed_Systems_Projects
 Three Projects for Distributed Systems course in [Coursera](https://www.coursera.org/).
+The repository includes the documentation and implementation of the project.
+The ultimate goal of the three projects is to create a marketplace where independent sellers and buyers follow the consistency model.  
 
-
-### Basic Implementations 
-Basic implementations comprises of the fundamental examples that is used to implement the three projects of this course.
+### Basic Implementation 
+Basic implementations comprise the basic examples that are used to implement the three projects of this course.
 
 - #### Python gRPC
     - [ ] TBC 
