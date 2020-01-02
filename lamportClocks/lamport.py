@@ -1,9 +1,3 @@
-#coding: utf-8
-
-# DSP16 EX1
-# Jenny Tyrväinen
-# 013483708
-
 import lnode
 import random
 import socket
@@ -52,15 +46,13 @@ thisListener = thisnode.listen()
 # p1 : c r2 s3
 # p2 : r1 d s2 e
 
-
-
 # p0 : a s1 r3 b
 if curr_host == 0:
 	print("FRISK:",curr_host, nodes)
 
 	# a
 	thisnode.localEvent()
-	time.sleep(1)
+	# time.sleep(1)
 
 	# s1 (p0) -> r1 (p2)
 	target = nodes[2+1]
@@ -69,15 +61,15 @@ if curr_host == 0:
 	except socket.error as e:
 		pass
 
-	time.sleep(1)
+	# time.sleep(1)
 
 	# r3
 	thisListener.recieveMsg()
-	time.sleep(1)
+	# time.sleep(1)
 
 	# b
 	thisnode.localEvent()
-	time.sleep(1)
+	# time.sleep(1)
 
 
 # p1 : c r2 s3
@@ -86,11 +78,11 @@ elif curr_host == 1:
 
 	# c
 	thisnode.localEvent()
-	time.sleep(1)
+	# time.sleep(1)
 
 	# r2
 	thisListener.recieveMsg()
-	time.sleep(1)
+	# time.sleep(1)
 
 	# s3 (p1) -> r3 (p0)
 	target = nodes[0+1]
@@ -99,7 +91,7 @@ elif curr_host == 1:
 	except socket.error as e:
 		pass
 
-	time.sleep(1)
+	# time.sleep(1)
 
 
 # p2 : r1 d s2 e
@@ -108,11 +100,9 @@ elif curr_host == 2:
 
 	# r1
 	thisListener.recieveMsg()
-	time.sleep(1)
 
 	# d
 	thisnode.localEvent()
-	time.sleep(1)
 
 	# s2 (p2) -> r2 (p1)
 	target = nodes[1+1]
@@ -120,25 +110,6 @@ elif curr_host == 2:
 		thisnode.send(target.getID(), target.getHost(), target.getPort())
 	except socket.error as e:
 		pass
-	time.sleep(1)
-
 	# e
 	thisnode.localEvent()
-	time.sleep(1)
-
-
-# else:
-# 	while events.getValue() <= 100:
-# 		# Choose randomly if a local event happens or a message is sent
-# 		if random.randint(0,1):
-#
-# 			thisnode.localEvent()
-#
-# 		else:
-# 			# Choose randomly, where to send
-# 			target = nodes[random.choice(nodes.keys())]
-# 			try:
-# 				thisnode.send(target.getID(), target.getHost(), target.getPort())
-# 			except socket.error as e:
-# 				pass
 

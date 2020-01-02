@@ -24,22 +24,22 @@ class LListener():
 
 		self.listener = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		self.listener.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-		self.listener.settimeout(10)
+		# self.listener.settimeout(10)
 		self.listener.bind((self.host, self.port))
 		self.listener.listen(10)
 
 	def recieveMsg(self):
 
 		try:
-			print("recieveMsg step 0")
+			# print("recieveMsg step 0")
 			clientsocket, address = self.listener.accept()
 
-			print("recieveMsg step 1")
+			# print("recieveMsg step 1")
 
 			msg = clientsocket.recv(self.msgsize)
 			clientsocket.close()
 
-			print("recieveMsg step 2")
+			# print("recieveMsg step 2")
 
 			# Received timestamp from the server
 			self.clock.increment()
