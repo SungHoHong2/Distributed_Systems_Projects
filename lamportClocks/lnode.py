@@ -8,7 +8,6 @@
 import socket
 import llistener
 import lclock
-import eventcounter
 
 class LNode:
 	"""
@@ -16,13 +15,12 @@ class LNode:
 
 	"""
 
-	def __init__(self, events, idnum, host, port):
+	def __init__(self, idnum, host, port):
 		# init the message size
 		self.msgsize = 1024
 		# init the clock
 		self.clock = lclock.LClock()
-		# init the events
-		self.events = events
+
 		# init the id number
 		self.idnum = idnum
 		# init the host
@@ -44,7 +42,7 @@ class LNode:
 
 	def listen(self):
 		# init the listener
-		self.listener = llistener.LListener(self.host, self.port, self.events, self.clock)
+		self.listener = llistener.LListener(self.host, self.port,  self.clock)
 		# return the listener
 		return self.listener
 
@@ -52,8 +50,7 @@ class LNode:
 	def localEvent(self):
 		# increase clock by one
 		self.clock.increment()
-		# increase event counter by one
-		self.events.increment()
+
 		# print clock
 		print("lclock",self.clock.getValue())
 
@@ -79,8 +76,7 @@ class LNode:
 		finally: 
 			# close the socket
 			self.sender.close()
-		#increase the event counter
-		self.events.increment()
+
 
 		# print Lamport clock
 		print("lclock",self.clock.getValue())

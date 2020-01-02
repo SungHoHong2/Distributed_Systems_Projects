@@ -7,7 +7,6 @@
 
 import socket
 import threading
-import eventcounter
 import traceback
 
 class LListener():
@@ -16,11 +15,9 @@ class LListener():
 
 	"""
 
-	def __init__(self, host, port, events, clock):
+	def __init__(self, host, port,  clock):
 		# init the clock
 		self.clock = clock
-		# init the events
-		self.events = events
 		# init the host
 		self.host = host
 		# init the port
@@ -52,9 +49,6 @@ class LListener():
 			# synchronize Lamport clock with other nodes
 			self.clock.increment()
 			n = self.clock.compareTimes(msg.split()[1])
-
-			# incresase event counter
-			self.events.increment()
 
 			# Printing for receiving the message.
 			print("r " + msg + " " + str(n))

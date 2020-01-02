@@ -3,7 +3,7 @@ import random
 import socket
 import sys
 import time
-import eventcounter
+
 
 # arguments [hosts.txt], [Current Node Number]
 if len(sys.argv) < 2:
@@ -16,8 +16,6 @@ conf_file = sys.argv[1]
 hosts = open(conf_file)
 nodes = {}
 
-# init event counter
-events = eventcounter.EventCounter()
 # get the current node number
 curr_host = int(sys.argv[2])
 
@@ -29,10 +27,10 @@ for idx, line in enumerate(hosts):
 
 	# take correct row for this node from the conf file.
 	if idx == curr_host:
-		thisnode = lnode.LNode(events, int(l[0]), l[1], int(l[2]))
+		thisnode = lnode.LNode(int(l[0]), l[1], int(l[2]))
 		continue
 
-	nodes[int(l[0])] = lnode.LNode(events, int(l[0]), l[1], int(l[2]))
+	nodes[int(l[0])] = lnode.LNode(int(l[0]), l[1], int(l[2]))
 
 # time to start all the nodes needed, hopefully.
 time.sleep(5)
