@@ -2,16 +2,18 @@
 Three Projects for Distributed Systems course in [Coursera](https://www.coursera.org/).
 
 
+### Basic Implementations 
+Basic implementations comprises of the fundamental examples that is used to implement the three projects of this course.
 
-### Python gRPC
-- [ ] TBC 
+- #### Python gRPC
+    - [ ] TBC 
 
-### Logical Clock 
-- [x] [benchmark for logical clock](lamportBenchmark) 
-- [x] [implementation of logical clock for independent processes](lamportClocks)
+- #### Logical Clock 
+    - [x] [benchmark for logical clock](lamportBenchmark) 
+    - [x] [implementation of logical clock for independent processes](lamportClocks)
 
-### Consistency Models 
-- [ ] TBC 
+- ### Consistency Models 
+    - [ ] TBC 
      
  
 
