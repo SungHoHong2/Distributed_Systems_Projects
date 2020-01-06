@@ -258,7 +258,6 @@ class Peer(Protocol):
 
     # this part automatically keeps running
     def dataReceived(self, data):
-        print "data received"
         msgs = data.split("|")
         start = '-'
         end = '-'
