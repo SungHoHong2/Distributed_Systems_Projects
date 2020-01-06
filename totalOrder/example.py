@@ -194,7 +194,7 @@ class Peer(Protocol):
         msg = message.toString()
         msg = "-" + msg + "-|/"
 
-        print "process " + str(procNo) + " sends " + msg
+        print "process " + str(procNo) + " sends:", msg
         # Send the message to everyone and myself
         self.socketsLock.acquire()
         try:
