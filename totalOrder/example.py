@@ -1,7 +1,6 @@
 # python example.py 127.0.0.1 0 2312
 # python example.py 127.0.0.1 1 2313
 # python example.py 127.0.0.1 2 2314
-#
 
 import optparse
 import socket
@@ -81,14 +80,13 @@ class Peer(Protocol):
 
         print "Connection Happened"
 
-        # total number of running processes
+        # check the total number of running processes
         global connections
         connections += 1
 
-        # global
+        # the total number of sockets
         global transports
         transports.append(self.transport)
-
         print "procNo: " + procNo + " connections: " + str(connections)
 
         # if all of the processes are on-line
@@ -102,7 +100,7 @@ class Peer(Protocol):
             self.loop()
 
     def loop(self):
-        # Write message for 20 times for nothing
+        # Send messages for 20 times and after that swtich to only receiving
         if (self.flag < 20):
             if (int(procNo) == 0):
                 # process 0 sending message
@@ -117,9 +115,10 @@ class Peer(Protocol):
                 send = Message((procNo), str(int(procNo) + 3), (self.clock), False, False, int(procNo), int(self.clock))
                 self.sendUpdate(send)
 
-            # get a message out of the queue
+            # get a message out of the message queue until the queue is depleted
             v = self.deliverMessage()
             while v:
+                # if the message is not a ACK message
                 if not v.ack:
                     self.counter = self.counter + int(v.message)
                     print str(self.flag) + ": O ", v.senderID, " leei +", v.message, " my counter was: ", str(
@@ -127,23 +126,38 @@ class Peer(Protocol):
                     (self.f).write(str(self.flag) + ": O " + str(v.senderID) + " leei +" + str(
                         v.message) + " my counter was: " + str(self.counter - int(v.message)) + " my counter: " + str(
                         self.counter) + "\n")
+
+                    # move the header to the next pending message
                     v = self.deliverMessage()
 
+            # call the loop function after 2 milliseconds
             reactor.callLater(2, self.loop)
             self.flag += 1
         else:
+
+            # check the local message queue
             v = self.deliverMessage()
             while v:
+                # if the message is not a ACK message
                 if not v.ack:
                     self.counter = self.counter + int(v.message)
+
+                    # print the message out
                     print str(self.flag) + ": O ", v.senderID, " leei +", v.message, " my counter was: ", str(
                         self.counter - int(v.message)), " my counter: ", str(self.counter)
                     (self.f).write(str(self.flag) + ": O " + str(v.senderID) + " leei +" + str(
                         v.message) + " my counter was: " + str(self.counter - int(v.message)) + " my counter: " + str(
                         self.counter) + "\n")
+
+                    # check the next pending message
                     v = self.deliverMessage()
+
+            # call the loop again after two seconds
             reactor.callLater(2, self.loop)
 
+
+    # get the message out of the message queue
+    # the function either returns None or the message
     def deliverMessage(self):
         message = None
         self.queueLock.acquire()
@@ -152,29 +166,30 @@ class Peer(Protocol):
             # get the message out in FIFO order
             priority, m = heapq.heappop(self.queue)
 
-            # run it when it is ready
+            # get the message if the message status is ready (got all 3 ACKs)
             if m.ready:
                 message = m
 
-            # put it back if it is not ready
+            # put the message back to the message queue
             else:
                 heapq.heappush(self.queue, (priority, m))
 
         self.queueLock.release()
         return message
 
+    # send the message to everyone
     def sendUpdate(self, message):
 
-        # Safely change clock
+        # increment the logical clock
         self.clockLock.acquire()
         self.clock += 1
         self.clockLock.release()
 
-        # Edit the message.clock before send
+        # add the clock information and the process number to the message
         message.clock = self.clock
         message.senderID = procNo
 
-        # Put dashes to prevent the messages from interfering with each other
+        # put dashes to prevent the messages from interfering with each other
         msg = message.toString()
         msg = "-" + msg + "-|/"
 
@@ -286,6 +301,7 @@ class Peer(Protocol):
         print "--------------"
 
 
+# PeerFactory is a data structure required to run a socket
 class PeerFactory(ClientFactory, ReconnectingClientFactory):
 
     def __init__(self):
@@ -318,6 +334,7 @@ class PeerFactory(ClientFactory, ReconnectingClientFactory):
     def stopFactory(self):
         print "@stopFactory"
 
+    # the socket initialize the Peer data structure
     def buildProtocol(self, addr):
         print "@buildProtocol"
         protocol = Peer(self)
@@ -327,6 +344,7 @@ class PeerFactory(ClientFactory, ReconnectingClientFactory):
 if __name__ == '__main__':
     address, procNo, porta = parse_args()
 
+    # the first process only creates one server
     if (int(procNo) == 0):
         # P0: server
         print "I am process " + procNo
@@ -337,6 +355,7 @@ if __name__ == '__main__':
         reactor.listenTCP(port, server)
         print "Starting server @" + address + " port " + str(port)
 
+    # the second process creates a client and a server
     elif (int(procNo) == 1):
 
         # P1: client
@@ -351,6 +370,7 @@ if __name__ == '__main__':
         reactor.listenTCP(int(porta), server2)
         print "Starting server @" + address + " port " + str(porta)
 
+    # the third process creates two clients
     elif (int(procNo) == 2):
         print "I am process " + procNo
         client3 = PeerFactory()
