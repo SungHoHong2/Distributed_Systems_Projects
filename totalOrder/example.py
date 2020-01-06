@@ -5,11 +5,9 @@
 
 import optparse
 import socket
-import random
 import time
 import heapq
 import copy
-import sys
 import threading
 
 from twisted.internet.protocol import ReconnectingClientFactory
@@ -80,30 +78,42 @@ class Peer(Protocol):
         self.factory = factory
 
     def connectionMade(self):
+
         print "Connection Happened"
+
+        # total number of running processes
         global connections
         connections += 1
+
+        # global
         global transports
         transports.append(self.transport)
+
         print "procNo: " + procNo + " connections: " + str(connections)
+
+        # if all of the processes are on-line
         if (connections == 2):
-            # Ftiaxnw to arxeio gia na grafw ta minimata pou lamvanw
+            # create a local file for storing the logs
             fileName = "delivered-messages-" + str(procNo)
             self.f = open(fileName, 'w')
             self.clock = int(procNo)
             print "I begin with clock ", str(self.clock)
+            # start the loop
             self.loop()
 
     def loop(self):
         # Write message
         if (self.flag < 20):
             if (int(procNo) == 0):
+                # process 0 sending message
                 send = Message((procNo), str(int(procNo) + 1), (self.clock), False, False, int(procNo), int(self.clock))
                 self.sendUpdate(send)
             elif (int(procNo) == 1):
+                # process 1 sending message
                 send = Message((procNo), str(int(procNo) + 2), (self.clock), False, False, int(procNo), int(self.clock))
                 self.sendUpdate(send)
             elif (int(procNo) == 2):
+                # process 2 sending message
                 send = Message((procNo), str(int(procNo) + 3), (self.clock), False, False, int(procNo), int(self.clock))
                 self.sendUpdate(send)
 
@@ -138,14 +148,14 @@ class Peer(Protocol):
         self.queueLock.acquire()
 
         if len(self.queue) > 0:
-            # pairnw to prwto stoixeio apo tin oura(FIFO)
+            # get the message out in FIFO order
             priority, m = heapq.heappop(self.queue)
 
-            # elegxw an einai ready
+            # run it when it is ready
             if m.ready:
                 message = m
 
-            # to ksana vazw pisw ean den einai etoimo
+            # put it back if it is not ready
             else:
                 heapq.heappush(self.queue, (priority, m))
 
@@ -163,22 +173,24 @@ class Peer(Protocol):
         message.clock = self.clock
         message.senderID = procNo
 
-        # Vazw paules gia na min mplekontai ta minimata metaksi tous
+        # Put dashes to prevent the messages from interfering with each other
         msg = message.toString()
         msg = "-" + msg + "-|/"
 
-        # Stelnw se olous kai ston eauto mou
+        # Send the message to everyone and myself
         self.socketsLock.acquire()
         try:
-            # To stelnw ston eauto mou
+            # Send to myself
             self.totalOrder(message)
-            # To stelnw kai stous allous
+
+            # Send to others
             global transports
             for transport in transports:
                 transport.write(msg)
         except Exception, ex1:
             print "Exception trying to send: ", ex1.args[0]
         self.socketsLock.release()
+
 
     def sendAck(self):
         self.ts = time.time()
@@ -199,28 +211,28 @@ class Peer(Protocol):
             if msg.ack:
                 self.acks[id].append(msg)
             else:
-                # Einai original minima to vazw stin arxi"
+                # if it is an original message put it first
                 self.acks[id].insert(0, msg)
         else:
-            # Auto to mnm erxetai gia prwti fora kai to vazoume stin lista mas"
+            # The first time the message is in the list
             self.acks[id] = [msg]
 
         self.queueLock.acquire()
 
         if not msg.ack:
-            # Den einai ACK opote to vazw stin oura mas (FIFO)
+            # push the message in the queue
             heapq.heappush(self.queue, ((msg.creatorClock, msg.creatorID), msg))
 
-        # Elava ola ta ACKs kai to markarw san etoimo
+        # Received all the ACKs and marked it as READY
         if len(self.acks[id]) == 3:
             self.acks[id][0].ready = True
             del self.acks[id]
 
-        # Kanw ena antigrafo tou minimatos
+        # make a copy of the message
         copyMessage = copy.copy(msg)
         self.queueLock.release()
 
-        # Ean den einai ack to minima kai einai oroginal tote to kanw Ack
+        # If it is not a message and it is a serial then I do ACK
         if not copyMessage.ack and copyMessage.senderID != procNo:
             copyMessage.ack = True
             self.sendUpdate(copyMessage)
@@ -230,12 +242,12 @@ class Peer(Protocol):
         start = '-'
         end = '-'
         for minima in msgs:
-            # print minima
+            # print Message
             if len(minima) > 5:
-                # Afairw tis paules ('-')
+                # remove the dashes ('-')
                 minima = minima[minima.find(start) + len(start):minima.rfind(end)]
                 minima = minima.split(".")
-                # Dimiourgw ena antikeimeno tupou Message
+                # Create a Message Object
                 msg = self.createMessage(minima)
                 self.totalOrder(msg)
 
@@ -254,7 +266,6 @@ class Peer(Protocol):
         creatorId = var[5]
         creatorClock = var[6]
         msgObject = Message(int(senderID), text, int(senderClock), ready, ack, int(creatorId), int(creatorClock))
-
         return msgObject
 
     def printMsg(self, msg):
@@ -310,6 +321,7 @@ if __name__ == '__main__':
     address, procNo, porta = parse_args()
 
     if (int(procNo) == 0):
+        # P0: server
         print "I am process " + procNo
         print "Addr: " + address + "\nPort: " + porta
         print "Local ip: " + socket.gethostbyname(socket.gethostname()) + "\n"
@@ -317,26 +329,32 @@ if __name__ == '__main__':
         server = PeerFactory()
         reactor.listenTCP(port, server)
         print "Starting server @" + address + " port " + str(port)
+
     elif (int(procNo) == 1):
-        # Client things
+
+        # P1: client
         print "I am process " + procNo
         factory = PeerFactory()
         port = int(porta) - 1
         print "Connecting to host " + address + " port " + str(port)
         reactor.connectTCP(address, port, factory)
-        # Server things
+
+        # P1: server
         server2 = PeerFactory()
         reactor.listenTCP(int(porta), server2)
         print "Starting server @" + address + " port " + str(porta)
+
     elif (int(procNo) == 2):
         print "I am process " + procNo
         client3 = PeerFactory()
-        factory2 = PeerFactory()
+        client1 = PeerFactory()
         port1 = int(porta) - 1
         port2 = int(porta) - 2
+
+        # P2: client, client
         print "Connecting to host " + address + " port " + str(port1)
         reactor.connectTCP(address, port1, client3)
         print "Connecting to host " + address + " port " + str(port2)
-        reactor.connectTCP(address, port2, factory2)
+        reactor.connectTCP(address, port2, client1)
 
     reactor.run()
