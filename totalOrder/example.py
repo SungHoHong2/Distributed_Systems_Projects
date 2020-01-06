@@ -170,6 +170,8 @@ class Peer(Protocol):
             # get the message if the message status is ready (got all 3 ACKs)
             if m.ready:
                 message = m
+                self.printMsg(message)
+
 
             # put the message back to the message queue
             else:
@@ -191,7 +193,7 @@ class Peer(Protocol):
         message.senderID = procNo
 
         # put dashes to prevent the messages from interfering with each other
-        self.printMsg(message)
+        # self.printMsg(message)
 
         msg = message.toString()
         msg = "-" + msg + "-|/"
