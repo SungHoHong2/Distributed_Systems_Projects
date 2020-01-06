@@ -1,11 +1,6 @@
-# Giorgos Mitaros AM: 2312
-# Email: gmitaros@gmail.com , cs122312@cse.uoi.gr
-#
-# Sunergasia me Niko Koulina AM: 2277
-#
-# python totormu.py 127.0.0.1 0 2312
-# python totormu.py 127.0.0.1 1 2313
-# python totormu.py 127.0.0.1 2 2314
+# python example.py 127.0.0.1 0 2312
+# python example.py 127.0.0.1 1 2313
+# python example.py 127.0.0.1 2 2314
 #
 
 import optparse
