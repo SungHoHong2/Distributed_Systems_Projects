@@ -191,10 +191,11 @@ class Peer(Protocol):
         message.senderID = procNo
 
         # put dashes to prevent the messages from interfering with each other
+        print "process " + str(procNo) + " sends:", message
+
         msg = message.toString()
         msg = "-" + msg + "-|/"
 
-        print "process " + str(procNo) + " sends:", msg
         # Send the message to everyone and myself
         self.socketsLock.acquire()
         try:
