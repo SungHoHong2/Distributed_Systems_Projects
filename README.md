@@ -15,7 +15,6 @@ Basic implementations comprise the basic examples that are used to implement the
 
 - #### Consistency Models 
     - [x] [implementation for causal total-ordering](totalOrder)
-        - the source code indicates that the events from process 0, 1, 2 are totally ordered 
     
          
      
