@@ -102,7 +102,7 @@ class Peer(Protocol):
             self.loop()
 
     def loop(self):
-        # Write message
+        # Write message for 20 times for nothing
         if (self.flag < 20):
             if (int(procNo) == 0):
                 # process 0 sending message
@@ -117,6 +117,7 @@ class Peer(Protocol):
                 send = Message((procNo), str(int(procNo) + 3), (self.clock), False, False, int(procNo), int(self.clock))
                 self.sendUpdate(send)
 
+            # receive a message
             v = self.deliverMessage()
             while v:
                 if not v.ack:
@@ -238,6 +239,7 @@ class Peer(Protocol):
             self.sendUpdate(copyMessage)
 
     def dataReceived(self, data):
+        print "data received"
         msgs = data.split("|")
         start = '-'
         end = '-'
