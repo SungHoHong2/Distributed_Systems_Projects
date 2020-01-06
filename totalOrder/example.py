@@ -117,7 +117,7 @@ class Peer(Protocol):
                 send = Message((procNo), str(int(procNo) + 3), (self.clock), False, False, int(procNo), int(self.clock))
                 self.sendUpdate(send)
 
-            # receive a message
+            # get a message out of the queue
             v = self.deliverMessage()
             while v:
                 if not v.ack:
@@ -206,8 +206,10 @@ class Peer(Protocol):
         self.clock = max(int(msg.clock), int(self.clock)) + 1
         self.clockLock.release()
 
+        # the owner of the message and the logical clock
         id = (msg.creatorID, msg.creatorClock)
 
+        # list of ACKs
         if id in self.acks:
             if msg.ack:
                 self.acks[id].append(msg)
@@ -220,6 +222,7 @@ class Peer(Protocol):
 
         self.queueLock.acquire()
 
+        # if the message is not the ACK
         if not msg.ack:
             # push the message in the queue
             heapq.heappush(self.queue, ((msg.creatorClock, msg.creatorID), msg))
@@ -233,11 +236,12 @@ class Peer(Protocol):
         copyMessage = copy.copy(msg)
         self.queueLock.release()
 
-        # If it is not a message and it is a serial then I do ACK
+        # if the message is not ACK and the message is not for the receiver
         if not copyMessage.ack and copyMessage.senderID != procNo:
             copyMessage.ack = True
             self.sendUpdate(copyMessage)
 
+    # this part automatically keeps running
     def dataReceived(self, data):
         print "data received"
         msgs = data.split("|")
@@ -251,6 +255,7 @@ class Peer(Protocol):
                 minima = minima.split(".")
                 # Create a Message Object
                 msg = self.createMessage(minima)
+                # Put the message to to the total order
                 self.totalOrder(msg)
 
     def connectionLost(self, reason):

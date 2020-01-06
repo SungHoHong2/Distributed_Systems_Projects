@@ -1,0 +1,15 @@
+1: O 0 leei +1 my counter was: 0 my counter: 1
+1: O 1 leei +3 my counter was: 1 my counter: 4
+1: O 2 leei +5 my counter was: 4 my counter: 9
+2: O 0 leei +1 my counter was: 9 my counter: 10
+2: O 1 leei +3 my counter was: 10 my counter: 13
+2: O 2 leei +5 my counter was: 13 my counter: 18
+3: O 0 leei +1 my counter was: 18 my counter: 19
+3: O 1 leei +3 my counter was: 19 my counter: 22
+3: O 2 leei +5 my counter was: 22 my counter: 27
+4: O 0 leei +1 my counter was: 27 my counter: 28
+4: O 1 leei +3 my counter was: 28 my counter: 31
+4: O 2 leei +5 my counter was: 31 my counter: 36
+5: O 0 leei +1 my counter was: 36 my counter: 37
+5: O 1 leei +3 my counter was: 37 my counter: 40
+5: O 2 leei +5 my counter was: 40 my counter: 45
