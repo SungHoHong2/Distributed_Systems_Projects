@@ -123,6 +123,7 @@ class Peer(Protocol):
                     self.counter = self.counter + int(v.message)
                     print str(self.flag) + ": O ", v.senderID, " leei +", v.message, " my counter was: ", str(
                         self.counter - int(v.message)), " my counter: ", str(self.counter)
+
                     (self.f).write(str(self.flag) + ": O " + str(v.senderID) + " leei +" + str(
                         v.message) + " my counter was: " + str(self.counter - int(v.message)) + " my counter: " + str(
                         self.counter) + "\n")
@@ -193,6 +194,7 @@ class Peer(Protocol):
         msg = message.toString()
         msg = "-" + msg + "-|/"
 
+        print "process " + str(procNo) + " sends " + msg
         # Send the message to everyone and myself
         self.socketsLock.acquire()
         try:
@@ -208,16 +210,11 @@ class Peer(Protocol):
         self.socketsLock.release()
 
 
-    def sendAck(self):
-        self.ts = time.time()
-        try:
-            self.transport.write('<Ack> from ' + str(procNo))
-        except Exception, e:
-            print e.args[0]
-
     def totalOrder(self, msg):
         # Lamport Clock Update
         self.clockLock.acquire()
+
+        # compares the clock and chooses the highest number
         self.clock = max(int(msg.clock), int(self.clock)) + 1
         self.clockLock.release()
 
