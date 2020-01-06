@@ -191,7 +191,6 @@ class Peer(Protocol):
         message.senderID = procNo
 
         # put dashes to prevent the messages from interfering with each other
-        print "process " + str(procNo) + " sends:", message
         self.printMsg(message)
 
         msg = message.toString()
