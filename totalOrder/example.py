@@ -172,7 +172,6 @@ class Peer(Protocol):
                 message = m
                 self.printMsg(message)
 
-
             # put the message back to the message queue
             else:
                 heapq.heappush(self.queue, (priority, m))
