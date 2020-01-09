@@ -7,7 +7,7 @@ The ultimate goal of the three projects is to create a marketplace where indepen
 Basic implementations comprise the basic examples that are used to implement the three projects of this course.
 
 - #### Python gRPC
-    - [ ] TBC 
+    - [x] [gRPC communication between client and server](grpc) 
 
 - #### Logical Clock 
     - [x] [benchmark for logical clock](lamportBenchmark) 
