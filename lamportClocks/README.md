@@ -1,5 +1,13 @@
 ### Implementation of Lamport Clock
 
+```
+# run the program in this order
+# the prototype has a socker error issue when the processes are not running in the correct order 
+python lamport.py hosts.txt 2
+python lamport.py hosts.txt 1
+python lamport.py hosts.txt 0 
+```
+
 1 Code and design My implementation of Lamport Clocks consists of following Python (v. 2.7) files:
     - `lamport.py` The main class, containing main program logic. It checks, that the parameters are sufficient, reads the host file and parses it, then sleeps to wait, that all the nodes are ”online” before executing. The main event loop iterates over 100 events (local, sending, receiving), before finishing.
 • lnode.py: The class LNode implements a node’s functionality. The node has functions for local events and sending. It creates an instance of a LListener class, that handles receiving messages.
@@ -26,6 +34,10 @@ Running the code
 
 I ran my code as follows: I started three terminals.
 
-• 1st terminal: python lamport.py hosts.txt 0 • 2nd terminal: python lamport.py hosts.txt 1 • 3rd terminal: python lamport.py hosts.txt 2
+• 1st terminal:  python lamport.py hosts.txt 0 • 2nd terminal: python lamport.py hosts.txt 1 • 3rd terminal: python lamport.py hosts.txt 2
 
 The program waits for socket timeouts at the end for 10 seconds, so it isnt’t ”freezed”.
+
+
+
+

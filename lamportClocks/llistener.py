@@ -55,7 +55,7 @@ class LListener():
 			print("lclock", self.clock.getValue())
 
 		except socket.error as e:
-			pass
+			print(e.message)
 
 		return
 
