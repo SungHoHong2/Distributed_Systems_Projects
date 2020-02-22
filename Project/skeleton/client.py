@@ -4,8 +4,11 @@ import grpc
 import skeleton_pb2
 import skeleton_pb2_grpc
 
-def sendMsg(arg):
-    print("sendMSg",arg)
+def runEvent(arg):
+
+    if 'dest' in arg:
+        print("sendMSg",arg)
+
 
     # # open a gRPC channel
     # channel = grpc.insecure_channel('localhost:50051')

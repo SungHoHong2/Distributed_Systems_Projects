@@ -30,7 +30,7 @@ def print_func(obj, totalQueue, readyQueue):
         time.sleep(1)
 
         # each process sends runs the event as long as the dependencies are met
-        client.sendMsg(obj['events'][i])
+        client.runEvent(obj['events'][i])
 
 
 
