@@ -2,17 +2,17 @@
   {
     "name" : "P1",
     "type" : "client",
-    "events" :  [{"query_request":1, "dest":2 }, {"deposit_request":2, "dest":3}, {"query_return": 1}, {"deposit_return": 2}]
+    "events" :  [{"id":1, "name":"query_request", "dest":2 }, {"id":2, "name":"deposit_request", "dest":3}, {"id": 1, "name": "query_return"}, {"id":2, "name":"deposit_return"}]
   },
   {
     "name" : "P2",
     "type" : "bank",
-    "events" :  [{"query_receive": 1},{"query_execute": 1},{"query_reply": 1, "dest": 1}]
+    "events" :  [{"id":1, "name":"query_receive"},{"id": 1, "name":"query_execute"},{"id":1, "name":"query_reply", "dest": 1}]
   },
   {
     "name" : "P3",
     "type" : "bank",
-    "events" :  [{"deposit_receive": 2},{"deposit_execute": 2},{"deposit_reply":2, "dest": 1}]
+    "events" :  [{"id":2, "name":"deposit_receive"},{"id":2, "name":"deposit_execute"},{"id":2,"name":"deposit_reply", "dest": 1}]
   }
 ]
 

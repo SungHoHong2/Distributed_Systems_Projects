@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+message Event {
+  int32 id = 1;
+  string name = 2;
+  string dependency = 3;
+  int32 localclock = 4;
+}
+
+service Example {
+    rpc StrName(Event) returns (Event) {}
+}
