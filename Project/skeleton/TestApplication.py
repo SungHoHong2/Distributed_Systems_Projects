@@ -83,6 +83,7 @@ def print_func(obj,readyQueue):
         arg = obj['events'][i]
         # print('[FRISK]', arg)
 
+        remoteClock = 0
         # check if dependency exists
         if dpdict[arg['name']]:
             # if exists
@@ -91,26 +92,23 @@ def print_func(obj,readyQueue):
                 time.sleep(0.5)
                 for s in range(0, len(dplink)):
                     if dplink[s]['id'] == arg['id'] and dplink[s]['name'] == dpdict[arg['name']]:
-                        # proceed
-                        # if id == '1':
-                            # print(arg['name'],"dependency found")
-                            # local clock from remote process
-                            # print(dplink[s]['localclock'])
 
+                        remoteClock = dplink[s]['localclock']
                         linkExists = True
                         break
 
                 if linkExists:
                     break
 
-        eventList.append({'id':arg['id'],
-                          'name':arg['name'],
-                          'localClock':localClock})
+        eventList.append({'id':arg['id'],'name':arg['name'],'localClock':localClock})
 
         if 'dest' in arg:
             # each process runs the event as long as the dependencies are met
             channel = grpc.insecure_channel('localhost:5005'+str(arg['dest']))
             # create a stub (client)
+
+
+
             stub = example_pb2_grpc.ExampleStub(channel)
             event = example_pb2.Event(id=arg['id'],name=arg['name'],localclock=localClock)
             stub.StrName(event)
@@ -131,10 +129,6 @@ def print_func(obj,readyQueue):
     #     print(s)
 
 
-class Fals(object):
-    pass
-
-
 if __name__ == "__main__":
 
     # receive a format of input
@@ -151,7 +145,6 @@ if __name__ == "__main__":
         proc = Process(target=print_func,args=(jsonObj[i],readyQueue))
         proc.start()
 
-
     # check the readyQueue and see whether all the processes are finished
     while(True):
         time.sleep(1)
@@ -164,7 +157,6 @@ if __name__ == "__main__":
             break
 
     print("all processes are finished")
-
     # read all the files
     result = {}
 
@@ -180,6 +172,7 @@ if __name__ == "__main__":
                     result[item['id']][item['name']] = item['localClock']
                 else:
                     result[item['id']][item['name']] = item['localClock']
+
 
     # check for happen-before relationship
     testResult = True
