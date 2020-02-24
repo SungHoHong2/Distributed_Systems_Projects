@@ -114,19 +114,19 @@ def print_func(obj,readyQueue):
 
         localClock += 1
 
-    time.sleep(3)
+
+    with open(+'.json', 'w') as outfile:
+        json.dump(eventList, outfile)
+
+    # set the status to finish
+    readyQueue[int(id)-1] = 2
 
     # print out all the dependency link
-    print(obj['name'], dplink)
+    # print(obj['name'], dplink)
 
     # print out all the invoked events
-    for s in eventList:
-        print(s)
-
-
-    while True:
-        time.sleep(86400)
-    pass
+    # for s in eventList:
+    #     print(s)
 
 
 if __name__ == "__main__":
@@ -145,9 +145,19 @@ if __name__ == "__main__":
         proc = Process(target=print_func,args=(jsonObj[i],readyQueue))
         proc.start()
 
-    # since server.start() will not block, a sleep-loop is added to keep alive
-    while True:
-        time.sleep(86400)
+
+    # check the readyQueue and see whether all the processes are finished
+    while(True):
+        time.sleep(1)
+        allSet = True
+        for i in range(0, len(readyQueue)):
+            if readyQueue[i] != 2:
+                allSet = False
+
+        if allSet == True:
+            break
+
+    print("all processes are finished")
 
 
 # FIXME:
