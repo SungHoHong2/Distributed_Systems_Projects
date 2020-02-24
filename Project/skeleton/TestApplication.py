@@ -24,6 +24,9 @@ dpdict = {
     'withdraw_execute': None,
     'withdraw_reply': None,
     'withdraw_return': 'withdraw_reply',
+    'query': ['query_request','query_receive','query_execute','query_reply','query_return'],
+    'deposit':['deposit_request','deposit_receive','deposit_execute','deposit_reply','deposit_return'],
+    'withdraw':['withdraw_request','withdraw_receive','withdraw_execute','withdraw_reply','withdraw_return'],
 }
 
 # each process keeps a dependency link
@@ -159,18 +162,20 @@ if __name__ == "__main__":
     print("all processes are finished")
 
     # read all the files
+    result = {}
+
     for obj in jsonObj:
         print(obj['name'])
 
+        with open(obj['name']+'.json', 'r') as f:
+            chkObj = json.load(f)
+            for item in chkObj:
+                if item['id'] not in result:
+                    result[item['id']] = {}
+                    result[item['id']][item['name']] = item['localClock']
+                else:
+                    result[item['id']][item['name']] = item['localClock']
 
-
-
-
-# FIXME:
-
-# each processes should be able to return the results ...
-# the result of the output should be wrong without the logical clock
-
-
-
+    for key,value in result.items():
+        print(key,value)
 
