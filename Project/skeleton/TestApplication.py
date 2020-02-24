@@ -93,7 +93,13 @@ def print_func(obj,readyQueue):
                 for s in range(0, len(dplink)):
                     if dplink[s]['id'] == arg['id'] and dplink[s]['name'] == dpdict[arg['name']]:
 
+                        # FIXME: logical clock function
                         remoteClock = dplink[s]['localclock']
+                        if remoteClock >=  localClock:
+                            localClock = remoteClock;
+                            localClock += 1
+                        # FIXME: function end
+
                         linkExists = True
                         break
 
@@ -106,14 +112,13 @@ def print_func(obj,readyQueue):
             # each process runs the event as long as the dependencies are met
             channel = grpc.insecure_channel('localhost:5005'+str(arg['dest']))
             # create a stub (client)
-
-
-
             stub = example_pb2_grpc.ExampleStub(channel)
             event = example_pb2.Event(id=arg['id'],name=arg['name'],localclock=localClock)
             stub.StrName(event)
 
+        # FIXME: logical clock function
         localClock += 1
+        # FIXME: function end
 
     with open(obj['name']+'.json', 'w+') as outfile:
         json.dump(eventList, outfile)
