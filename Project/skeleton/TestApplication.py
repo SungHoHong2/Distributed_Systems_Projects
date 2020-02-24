@@ -114,8 +114,7 @@ def print_func(obj,readyQueue):
 
         localClock += 1
 
-
-    with open(+'.json', 'w') as outfile:
+    with open(obj['name']+'.json', 'w+') as outfile:
         json.dump(eventList, outfile)
 
     # set the status to finish
@@ -158,6 +157,11 @@ if __name__ == "__main__":
             break
 
     print("all processes are finished")
+
+    # read all the file
+
+
+
 
 
 # FIXME:
