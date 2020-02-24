@@ -139,7 +139,7 @@ if __name__ == "__main__":
 
     # receive the input.json
     for i in range(0, len(jsonObj)):
-        print(jsonObj[i])
+        # print(jsonObj[i])
         # print(jsonObj[i]['name'])
         proc = Process(target=print_func,args=(jsonObj[i],readyQueue))
         proc.start()
@@ -158,7 +158,9 @@ if __name__ == "__main__":
 
     print("all processes are finished")
 
-    # read all the file
+    # read all the files
+    for obj in jsonObj:
+        print(obj['name'])
 
 
 
