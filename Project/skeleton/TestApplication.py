@@ -131,6 +131,10 @@ def print_func(obj,readyQueue):
     #     print(s)
 
 
+class Fals(object):
+    pass
+
+
 if __name__ == "__main__":
 
     # receive a format of input
@@ -164,6 +168,7 @@ if __name__ == "__main__":
     # read all the files
     result = {}
 
+    # parse the data
     for obj in jsonObj:
         print(obj['name'])
 
@@ -176,6 +181,22 @@ if __name__ == "__main__":
                 else:
                     result[item['id']][item['name']] = item['localClock']
 
+    # check for happen-before relationship
+    testResult = True
     for key,value in result.items():
         print(key,value)
+        # get the representive name of the events
+        setName = [key for key in value.items()][0][0].split('_')[0]
+        eventSet = dpdict[setName]
+        for i in range(0,len(eventSet)-1):
+            print(value[eventSet[i]],value[eventSet[i+1]], value[eventSet[i]] < value[eventSet[i+1]])
+
+            if value[eventSet[i]] >= value[eventSet[i+1]]:
+                testResult = False
+
+    print("testResult", testResult)
+
+
+
+
 
