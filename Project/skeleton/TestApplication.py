@@ -95,7 +95,7 @@ def print_func(obj,readyQueue):
 
                         # FIXME: logical clock function
                         remoteClock = dplink[s]['localclock']
-                        if remoteClock >=  localClock:
+                        if remoteClock >= localClock:
                             localClock = remoteClock;
                             localClock += 1
                         # FIXME: function end
@@ -116,7 +116,7 @@ def print_func(obj,readyQueue):
             event = example_pb2.Event(id=arg['id'],name=arg['name'],localclock=localClock)
             stub.StrName(event)
 
-        # FIXME: logical clock function
+        # FIXME: default clock function
         localClock += 1
         # FIXME: function end
 
