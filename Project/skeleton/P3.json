@@ -1,1 +1,1 @@
-[{"id": 2, "name": "deposit_receive", "localClock": 2}, {"id": 2, "name": "deposit_execute", "localClock": 3}, {"id": 2, "name": "deposit_reply", "localClock": 4}]
+[{"id": 3, "name": "withdraw_request", "localClock": 0}, {"id": 3, "name": "withdraw_return", "localClock": 4}]

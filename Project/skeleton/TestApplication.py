@@ -6,6 +6,7 @@ import grpc
 from concurrent import futures
 import example_pb2
 import example_pb2_grpc
+import sys
 
 # dictionary for dependencies
 dpdict = {
@@ -99,7 +100,6 @@ def print_func(obj,readyQueue):
                             localClock = remoteClock;
                             localClock += 1
                         # FIXME: function end
-
                         linkExists = True
                         break
 
@@ -137,7 +137,7 @@ def print_func(obj,readyQueue):
 if __name__ == "__main__":
 
     # receive a format of input
-    with open('input.json', 'r') as f:
+    with open(sys.argv[1], 'r') as f:
         jsonObj = json.load(f)
 
     # shared variable
@@ -161,14 +161,12 @@ if __name__ == "__main__":
         if allSet == True:
             break
 
-    print("all processes are finished")
+    print("[Test]:all processes are finished")
     # read all the files
     result = {}
 
     # parse the data
     for obj in jsonObj:
-        print(obj['name'])
-
         with open(obj['name']+'.json', 'r') as f:
             chkObj = json.load(f)
             for item in chkObj:
@@ -182,19 +180,14 @@ if __name__ == "__main__":
     # check for happen-before relationship
     testResult = True
     for key,value in result.items():
-        print(key,value)
+        # print(key,value)
         # get the representive name of the events
         setName = [key for key in value.items()][0][0].split('_')[0]
         eventSet = dpdict[setName]
         for i in range(0,len(eventSet)-1):
-            print(value[eventSet[i]],value[eventSet[i+1]], value[eventSet[i]] < value[eventSet[i+1]])
+            print(eventSet[i],eventSet[i+1],value[eventSet[i]],value[eventSet[i+1]], value[eventSet[i]] < value[eventSet[i+1]])
 
             if value[eventSet[i]] >= value[eventSet[i+1]]:
                 testResult = False
 
     print("testResult", testResult)
-
-
-
-
-
