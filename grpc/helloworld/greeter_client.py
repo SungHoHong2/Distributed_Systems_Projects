@@ -14,10 +14,7 @@
 """The Python implementation of the GRPC helloworld.Greeter client."""
 
 from __future__ import print_function
-import logging
-
 import grpc
-
 import helloworld_pb2
 import helloworld_pb2_grpc
 
@@ -34,5 +31,4 @@ def run():
         print("Greeter client received(2): " + response.message)
 
 if __name__ == '__main__':
-    logging.basicConfig()
     run()
