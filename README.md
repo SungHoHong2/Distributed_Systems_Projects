@@ -3,18 +3,15 @@ Three Projects for Distributed Systems course in [Coursera](https://www.coursera
 The repository includes the documentation and implementation of the project.
 The ultimate goal of the three projects is to create a marketplace where independent sellers and buyers follow the consistency model.  
 
-### Basic Implementation 
-Basic implementations comprise the basic examples that are used to implement the three projects of this course.
+- ### gRPC
+    - [helloworld](grpc/helloworld)
+    - [route_guide](grpc/route_guide)
 
-- #### Python gRPC
-    - [x] [gRPC communication between client and server](grpc) 
+- ### Logical Clock 
+    - [benchmark for logical clock](lamportBenchmark) 
+    - [implementation of logical clock for independent processes](lamportClocks)
 
-- #### Logical Clock 
-    - [x] [benchmark for logical clock](lamportBenchmark) 
-    - [x] [implementation of logical clock for independent processes](lamportClocks)
-
-- #### Consistency Models 
-    - [x] [implementation for causal total-ordering](totalOrder)
+- ### Client Consistency 
     
          
      
