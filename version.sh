@@ -20,10 +20,12 @@ then
   then
     cd grpc/route_guide
     python3 -m grpc_tools.protoc -I. --python_out=. --grpc_python_out=. route_guide.proto
-
   fi
 
-
+elif [ "$1" = "skeleton" ]
+then
+    cd skeleton
+    python3 -m grpc_tools.protoc -I. --python_out=. --grpc_python_out=. skeleton.proto
 
 
 #elif [ "$1" = "Project_Skeleton" ]

@@ -27,6 +27,5 @@ def run():
     # cleanly block the calling thread until the server terminates
     server.wait_for_termination()
 
-
 if __name__ == '__main__':
     run()

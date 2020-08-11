@@ -1,30 +1,26 @@
 syntax = "proto3";
-// Interface exported by the server.
+// Defining a service "RouteGuide" using proto file
 service RouteGuide {
+
   // A simple RPC.
-  //
   // Obtains the feature at a given position.
-  //
   // A feature with an empty name is returned if there's no feature at the given
   // position.
   rpc GetFeature(Point) returns (Feature) {}
 
   // A server-to-client streaming RPC.
-  //
-  // Obtains the Features available within the given Rectangle.  Results are
+  // Obtains the Features available within the given Rectangle. Results are
   // streamed rather than returned at once (e.g. in a response message with a
   // repeated field), as the rectangle may cover a large area and contain a
   // huge number of features.
   rpc ListFeatures(Rectangle) returns (stream Feature) {}
 
   // A client-to-server streaming RPC.
-  //
   // Accepts a stream of Points on a route being traversed, returning a
   // RouteSummary when traversal is completed.
   rpc RecordRoute(stream Point) returns (RouteSummary) {}
 
   // A Bidirectional streaming RPC.
-  //
   // Accepts a stream of RouteNotes sent while a route is being traversed,
   // while receiving other RouteNotes (e.g. from other users).
   rpc RouteChat(stream RouteNote) returns (stream RouteNote) {}
@@ -44,7 +40,6 @@ message Point {
 message Rectangle {
   // One corner of the rectangle.
   Point lo = 1;
-
   // The other corner of the rectangle.
   Point hi = 2;
 }
@@ -63,7 +58,6 @@ message Feature {
 message RouteNote {
   // The location from which the message is sent.
   Point location = 1;
-
   // The message to be sent.
   string message = 2;
 }
@@ -76,13 +70,10 @@ message RouteNote {
 message RouteSummary {
   // The number of points received.
   int32 point_count = 1;
-
   // The number of known features passed while traversing the route.
   int32 feature_count = 2;
-
   // The distance covered in metres.
   int32 distance = 3;
-
   // The duration of the traversal in seconds.
   int32 elapsed_time = 4;
 }

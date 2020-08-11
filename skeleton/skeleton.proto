@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+// Defining a service "Greeter" using proto file
+service Skeleton {
+  // Unary RPC that receives HelloRequest and returns HelloReply
+  rpc MsgTransfer (MsgRequest) returns (MsgResponse) {}
+}
+// The request message containing the user's name.
+message MsgRequest {
+  string message = 1;
+}
+// The response message containing the greetings
+message MsgResponse {
+  string message = 1;
+}
