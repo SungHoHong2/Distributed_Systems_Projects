@@ -2,7 +2,7 @@
 
 - bank instances 
     - [ ] contains a `server` and a `client stub`
-    - [ ] banks can `communicate with each other` (client consistency)  
+    - [ ] banks can `communicate with each other` to maintain the consistency of the replica
  
 - client instances 
     - [ ] contains a `client stub`
