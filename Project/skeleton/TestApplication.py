@@ -10,50 +10,33 @@ import sys
 
 # dictionary for dependencies
 dpdict = {
-    'query_request' : None,
     'query_receive' : 'query_request',
-    'query_execute' : None,
-    'query_reply': None,
     'query_return':'query_reply',
-    'deposit_request': None,
     'deposit_receive': 'deposit_request',
-    'deposit_execute': None,
-    'deposit_reply': None,
     'deposit_return': 'deposit_reply',
-    'withdraw_request': None,
     'withdraw_receive': 'withdraw_request',
-    'withdraw_execute': None,
-    'withdraw_reply': None,
     'withdraw_return': 'withdraw_reply',
-    'query': ['query_request','query_receive','query_execute','query_reply','query_return'],
-    'deposit':['deposit_request','deposit_receive','deposit_execute','deposit_reply','deposit_return'],
-    'withdraw':['withdraw_request','withdraw_receive','withdraw_execute','withdraw_reply','withdraw_return'],
 }
-
 # each process keeps a dependency link
-dplink = []
+recvMsg = list()
 
-# result generated as a output file
-eventList = []
-
+# server
 class ExampleServicer(example_pb2_grpc.ExampleServicer):
-
-    def StrName(self,request, context):
+    def MsgDelivery(self,request, context):
+        # create a fake object as returning "None" causes error
         response = example_pb2.Event()
+        # received a message from external process
         eventRecord = {
             'id' : request.id,
             'name' : request.name,
-            'localclock' : request.localclock
+            'money' : request.money
         }
-        # store the received request to the dependencies
-        dplink.append(eventRecord)
+        # store the received request to the buffer
+        recvMsg.append(eventRecord)
+        # return the fake object
         return response
 
-def print_func(obj,readyQueue):
-    localClock = 0
-    # print(obj['name'][1:])
-    # print(obj['type'])
-    # print(obj['events'])
+def worker(obj,readyQueue):
 
     # each process runs the server as a thread
     id = obj['name'][1:]
@@ -69,125 +52,72 @@ def print_func(obj,readyQueue):
 
     # need to wait until all processes are ready
     readyQueue[int(id)-1] = 1
-    while(True):
-        allSet = True
-        for i in range(0, len(readyQueue)):
-            if readyQueue[i] != 1:
-                allSet = False
+    waitWorker(1, readyQueue)
 
-        if allSet == True:
-            break
-
+    print(id,"Function BEGIN!")
     # generate the events
     for i in range(0, len(obj['events'])):
         # print(obj['name'], obj['events'][i])
         arg = obj['events'][i]
-        # print('[FRISK]', arg)
-
-        remoteClock = 0
-        # check if dependency exists
-        if dpdict[arg['name']]:
-            # if exists
-            linkExists = False
-            while(True):
-                time.sleep(0.5)
-                for s in range(0, len(dplink)):
-                    if dplink[s]['id'] == arg['id'] and dplink[s]['name'] == dpdict[arg['name']]:
-
-                        # FIXME: logical clock function
-                        remoteClock = dplink[s]['localclock']
-                        if remoteClock >= localClock:
-                            localClock = remoteClock;
-                            localClock += 1
-                        # FIXME: function end
-                        linkExists = True
-                        break
-
-                if linkExists:
-                    break
-
-        eventList.append({'id':arg['id'],'name':arg['name'],'localClock':localClock})
-
+        # print(id, arg)
+        # the event is sending the message to external
         if 'dest' in arg:
-            # each process runs the event as long as the dependencies are met
+            # get the destination
             channel = grpc.insecure_channel('localhost:5005'+str(arg['dest']))
             # create a stub (client)
             stub = example_pb2_grpc.ExampleStub(channel)
-            event = example_pb2.Event(id=arg['id'],name=arg['name'],localclock=localClock)
-            stub.StrName(event)
+            # craft a message
+            event = example_pb2.Event(id=arg['id'],name=arg['name'],money=0)
+            # send and receive a message
+            stub.MsgDelivery(event)
 
-        # FIXME: default clock function
-        localClock += 1
-        # FIXME: function end
+        if 'recv' in arg:
+            # wait for the reply function
+            # print(id, arg['name'], 'waiting for ...', dpdict[arg['name']])
+            depFound = False
+            while not(depFound):
+                time.sleep(1)
+                for i in range(len(recvMsg)):
+                    if recvMsg[i]['name'] == dpdict[arg['name']]:
+                        # FIXME: Execute the operation
+                        print(id,'execute operation', recvMsg[i]['name'])
 
-    with open(obj['name']+'.json', 'w+') as outfile:
-        json.dump(eventList, outfile)
+                        recvMsg.pop(i)
+                        depFound = True
+                        break
 
     # set the status to finish
     readyQueue[int(id)-1] = 2
+    print(id,"Function END!")
+    waitWorker(2, readyQueue)
 
-    # print out all the dependency link
-    # print(obj['name'], dplink)
-
-    # print out all the invoked events
-    # for s in eventList:
-    #     print(s)
-
-
-if __name__ == "__main__":
-
-    # receive a format of input
-    with open(sys.argv[1], 'r') as f:
-        jsonObj = json.load(f)
-
-    # shared variable
-    readyQueue = Array("i", len(jsonObj))
-
-    # receive the input.json
-    for i in range(0, len(jsonObj)):
-        # print(jsonObj[i])
-        # print(jsonObj[i]['name'])
-        proc = Process(target=print_func,args=(jsonObj[i],readyQueue))
-        proc.start()
-
-    # check the readyQueue and see whether all the processes are finished
+def waitWorker(type, queue):
+    allSet = True
     while(True):
         time.sleep(1)
         allSet = True
-        for i in range(0, len(readyQueue)):
-            if readyQueue[i] != 2:
+        for i in range(0, len(queue)):
+            if queue[i] != type:
                 allSet = False
-
         if allSet == True:
             break
 
+if __name__ == "__main__":
+
+    # receive a json file as an input
+    with open(sys.argv[1], 'r') as f:
+        jsonObj = json.load(f)
+
+    # shared counter that is used for counting the running processes
+    readyQueue = Array("i", len(jsonObj))
+
+    # iterate the json file
+    for i in range(0, len(jsonObj)):
+        # initiate the process with the print_func and pass the arguements and the shared counter
+        proc = Process(target=worker,args=(jsonObj[i],readyQueue))
+        # start the function
+        proc.start()
+
+    # check the shared counter and see whether all the processes are finished
+    waitWorker(2, readyQueue)
     print("[Test]:all processes are finished")
-    # read all the files
-    result = {}
-
-    # parse the data
-    for obj in jsonObj:
-        with open(obj['name']+'.json', 'r') as f:
-            chkObj = json.load(f)
-            for item in chkObj:
-                if item['id'] not in result:
-                    result[item['id']] = {}
-                    result[item['id']][item['name']] = item['localClock']
-                else:
-                    result[item['id']][item['name']] = item['localClock']
-
-
-    # check for happen-before relationship
-    testResult = True
-    for key,value in result.items():
-        # print(key,value)
-        # get the representive name of the events
-        setName = [key for key in value.items()][0][0].split('_')[0]
-        eventSet = dpdict[setName]
-        for i in range(0,len(eventSet)-1):
-            print(eventSet[i],eventSet[i+1],value[eventSet[i]],value[eventSet[i+1]], value[eventSet[i]] < value[eventSet[i+1]])
-
-            if value[eventSet[i]] >= value[eventSet[i+1]]:
-                testResult = False
-
-    print("testResult", testResult)

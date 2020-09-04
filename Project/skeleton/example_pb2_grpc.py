@@ -14,8 +14,8 @@ class ExampleStub(object):
     Args:
       channel: A grpc.Channel.
     """
-    self.StrName = channel.unary_unary(
-        '/Example/StrName',
+    self.MsgDelivery = channel.unary_unary(
+        '/Example/MsgDelivery',
         request_serializer=example__pb2.Event.SerializeToString,
         response_deserializer=example__pb2.Event.FromString,
         )
@@ -25,7 +25,7 @@ class ExampleServicer(object):
   # missing associated documentation comment in .proto file
   pass
 
-  def StrName(self, request, context):
+  def MsgDelivery(self, request, context):
     # missing associated documentation comment in .proto file
     pass
     context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -35,8 +35,8 @@ class ExampleServicer(object):
 
 def add_ExampleServicer_to_server(servicer, server):
   rpc_method_handlers = {
-      'StrName': grpc.unary_unary_rpc_method_handler(
-          servicer.StrName,
+      'MsgDelivery': grpc.unary_unary_rpc_method_handler(
+          servicer.MsgDelivery,
           request_deserializer=example__pb2.Event.FromString,
           response_serializer=example__pb2.Event.SerializeToString,
       ),

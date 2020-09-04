@@ -18,7 +18,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=b'\n\rexample.proto\"I\n\x05\x45vent\x12\n\n\x02id\x18\x01 \x01(\x05\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x12\n\ndependency\x18\x03 \x01(\t\x12\x12\n\nlocalclock\x18\x04 \x01(\x05\x32&\n\x07\x45xample\x12\x1b\n\x07StrName\x12\x06.Event\x1a\x06.Event\"\x00\x62\x06proto3'
+  serialized_pb=b'\n\rexample.proto\"D\n\x05\x45vent\x12\n\n\x02id\x18\x01 \x01(\x05\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x12\n\ndependency\x18\x03 \x01(\t\x12\r\n\x05money\x18\x04 \x01(\x05\x32*\n\x07\x45xample\x12\x1f\n\x0bMsgDelivery\x12\x06.Event\x1a\x06.Event\"\x00\x62\x06proto3'
 )
 
 
@@ -53,7 +53,7 @@ _EVENT = _descriptor.Descriptor(
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='localclock', full_name='Event.localclock', index=3,
+      name='money', full_name='Event.money', index=3,
       number=4, type=5, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
@@ -72,7 +72,7 @@ _EVENT = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=17,
-  serialized_end=90,
+  serialized_end=85,
 )
 
 DESCRIPTOR.message_types_by_name['Event'] = _EVENT
@@ -93,12 +93,12 @@ _EXAMPLE = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
-  serialized_start=92,
-  serialized_end=130,
+  serialized_start=87,
+  serialized_end=129,
   methods=[
   _descriptor.MethodDescriptor(
-    name='StrName',
-    full_name='Example.StrName',
+    name='MsgDelivery',
+    full_name='Example.MsgDelivery',
     index=0,
     containing_service=None,
     input_type=_EVENT,

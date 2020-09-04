@@ -27,16 +27,10 @@ then
     cd skeleton
     python3 -m grpc_tools.protoc -I. --python_out=. --grpc_python_out=. skeleton.proto
 
-
-#elif [ "$1" = "Project_Skeleton" ]
-#then
-#  cd Project/skeleton/
-#  python3 -m grpc_tools.protoc -I. --python_out=. --grpc_python_out=. example.proto
-#
-#elif [ "$1" = "Project_Example" ]
-#then
-#  cd Project/example/
-#  python3 -m grpc_tools.protoc -I. --python_out=. --grpc_python_out=. example.proto
+elif [ "$1" = "Project_Skeleton" ]
+then
+  cd Project/skeleton/
+  python3 -m grpc_tools.protoc -I. --python_out=. --grpc_python_out=. example.proto
 
 else
   echo "no argument"
