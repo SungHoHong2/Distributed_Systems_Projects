@@ -22,14 +22,14 @@ then
     python3 -m grpc_tools.protoc -I. --python_out=. --grpc_python_out=. route_guide.proto
   fi
 
-elif [ "$1" = "skeleton" ]
-then
-    cd skeleton
-    python3 -m grpc_tools.protoc -I. --python_out=. --grpc_python_out=. skeleton.proto
-
 elif [ "$1" = "Project_Skeleton" ]
 then
   cd Project/skeleton/
+  python3 -m grpc_tools.protoc -I. --python_out=. --grpc_python_out=. example.proto
+
+elif [ "$1" = "Project1" ]
+then
+  cd Project/Project1/
   python3 -m grpc_tools.protoc -I. --python_out=. --grpc_python_out=. example.proto
 
 else

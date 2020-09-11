@@ -1,17 +1,20 @@
 [
   {
     "name" : "P1",
+    "location" : [[4,8], [6,8]],
     "type" : "client",
     "events" :  [{"id":1, "name":"query_request", "money": 400, "dest":2 }, {"id":2, "name":"deposit_request", "money": 170, "dest":3}, {"id": 1, "name": "query_return", "recv": true }, {"id":2, "name":"deposit_return", "recv": true }]
   },
   {
     "name" : "P2",
+    "location" : [5,10],
     "type" : "bank",
     "balance" : 200,
     "events" :  [{"id":1, "name":"query_receive", "recv": true },{"id": 1, "name":"query_execute", "exec":true },{"id":1, "name":"query_reply", "dest": 1}]
   },
   {
     "name" : "P3",
+    "location" : [9,9],
     "type" : "bank",
     "balance" : 170,
     "events" :  [{"id":2, "name":"deposit_receive", "recv": true },{"id":2, "name":"deposit_execute", "exec":true },{"id":2,"name":"deposit_reply", "dest": 1}]
