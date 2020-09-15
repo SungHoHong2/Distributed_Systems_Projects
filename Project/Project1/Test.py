@@ -113,11 +113,11 @@ if __name__ == "__main__":
         if len(returnDict.items()) == len(branches):
 
             for key in returnDict:
-                # print({'id' : key, 'recv' : returnDict[key]})
+                print({'id' : key, 'recv' : returnDict[key]})
                 rtnArray.append({'id' : key, 'recv' : returnDict[key]})
             break
 
     # write the output file
-    filename = sys.argv[1].split('.json')[0]
+    filename = sys.argv[1].split('.')[0]
     with open(filename+"_ouput.json", "w") as outfile:
         json.dump(rtnArray,outfile)
