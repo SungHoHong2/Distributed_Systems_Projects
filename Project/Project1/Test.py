@@ -1,4 +1,5 @@
 import json
+from multiprocessing import Manager
 from multiprocessing import Process
 from multiprocessing import Array
 import time
@@ -10,8 +11,10 @@ import sys
 import Global
 from Client import Client
 from Bank import Bank
+# from json2xml import json2xml
+# from json2xml.utils import readfromjson
 
-def worker(obj,readyQueue):
+def worker(obj,readyQueue,returnDict):
     # Unique Process id
     id = obj['id']
     # Set the type (Bank, Client) for the Process
@@ -66,15 +69,20 @@ def worker(obj,readyQueue):
     Global.waitWorker(Global.FINISH, readyQueue)
     # print function used for debugging purposes
     # print("DEBUG",id,type, bank.recvMsg if type == 'bank' else client.recvMsg)
-    print("DEBUG",id, client.recvMsg if type == 'client' else bank.balance)
-
-
+    # print("DEBUG",id, client.recvMsg if type == 'client' else bank.balance)
+    if type == 'client':
+        time.sleep(1)
+        returnDict[id] = client.recvMsg
 
 
 if __name__ == "__main__":
     # receive a json file as an input
     with open(sys.argv[1], 'r') as f:
         jsonObj = json.load(f)
+
+    # set up the shared hashmap for output
+    manager = Manager()
+    returnDict = manager.dict()
 
     # shared counter that checks the status of the running processes
     readyQueue = Array("i", len(jsonObj))
@@ -90,11 +98,26 @@ if __name__ == "__main__":
         # create the Bank process
         if jsonObj[i]['type'] == 'bank':
             jsonObj[i]['branches'] = branches
-            proc = Process(target=worker, args=(jsonObj[i], readyQueue))
+            proc = Process(target=worker, args=(jsonObj[i], readyQueue, returnDict))
         # create the Client process
         elif jsonObj[i]['type'] == 'client':
             jsonObj[i]['branches'] = branches
-            proc = Process(target=worker, args=(jsonObj[i], readyQueue))
+            proc = Process(target=worker, args=(jsonObj[i], readyQueue, returnDict))
         # initiate the process
         proc.start()
 
+    # wait until the all the output from the clients are collected
+    rtnArray = list()
+    while True:
+        time.sleep(1)
+        if len(returnDict.items()) == len(branches):
+
+            for key in returnDict:
+                # print({'id' : key, 'recv' : returnDict[key]})
+                rtnArray.append({'id' : key, 'recv' : returnDict[key]})
+            break
+
+    # write the output file
+    filename = sys.argv[1].split('.json')[0]
+    with open(filename+"_ouput.json", "w") as outfile:
+        json.dump(rtnArray,outfile)
