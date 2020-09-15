@@ -36,6 +36,7 @@ def worker(obj,readyQueue):
         # execute all the events from the input
         client.executeEvents()
         # set the client process to finish
+        time.sleep(1)
         readyQueue[len(branches) + int(id)-1] = Global.FINISH
 
     # if the type of the process is a Bank
@@ -58,14 +59,17 @@ def worker(obj,readyQueue):
         # wait until all the other processes are ready
         Global.waitWorker(Global.READY, readyQueue)
         # set the bank process to finish
+        time.sleep(1)
         readyQueue[int(id)-1] = Global.FINISH
 
-    time.sleep(1)
     # wait until all the other processes are finished
     Global.waitWorker(Global.FINISH, readyQueue)
     # print function used for debugging purposes
     # print("DEBUG",id,type, bank.recvMsg if type == 'bank' else client.recvMsg)
     print("DEBUG",id, client.recvMsg if type == 'client' else bank.balance)
+
+
+
 
 if __name__ == "__main__":
     # receive a json file as an input
@@ -93,3 +97,4 @@ if __name__ == "__main__":
             proc = Process(target=worker, args=(jsonObj[i], readyQueue))
         # initiate the process
         proc.start()
+
