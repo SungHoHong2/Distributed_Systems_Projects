@@ -16,8 +16,6 @@ def worker(obj,readyQueue):
     id = obj['id']
     # Set the type (Bank, Client) for the Process
     type = obj['type']
-    # get the list of addresses of the branch
-    branches = obj['branches']
     # Pointer for Client
     client = None
     # Pointer for Bank
@@ -28,20 +26,20 @@ def worker(obj,readyQueue):
         # create client instance
         client = Client(int(id), obj['events'])
         # set the client process to ready
-        readyQueue[len(branches) + client.id - 1] = Global.READY
+        readyQueue[client.id - 1] = Global.READY
         # wait until all the other processes are ready
         Global.waitWorker(Global.READY, readyQueue)
         # create a gRPC stub for client
         client.createStub()
         # execute all the events from the input
         client.executeEvents()
-        # set the client process to finish
-        readyQueue[len(branches) + int(id)-1] = Global.FINISH
 
     # if the type of the process is a Bank
     elif type == 'bank':
         # get the replica of the balance of the Bank
         balance = obj['balance']
+        # get the unique ID of its peer branches
+        branches = obj['branches']
         # create a gRPC server
         server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
         # create a bank instance
@@ -57,15 +55,16 @@ def worker(obj,readyQueue):
         readyQueue[int(id) - 1] = Global.READY
         # wait until all the other processes are ready
         Global.waitWorker(Global.READY, readyQueue)
-        # set the bank process to finish
-        readyQueue[int(id)-1] = Global.FINISH
 
     time.sleep(1)
+    # set the process to finish
+    readyQueue[int(id)-1] = Global.FINISH
     # wait until all the other processes are finished
     Global.waitWorker(Global.FINISH, readyQueue)
     # print function used for debugging purposes
     # print("DEBUG",id,type, bank.recvMsg if type == 'bank' else client.recvMsg)
-    print("DEBUG",id, client.recvMsg if type == 'client' else bank.balance)
+    # print function for checking the consistency of the replica
+    print("FINISH",id,type, bank.balance if type == 'bank' else None)
 
 if __name__ == "__main__":
     # receive a json file as an input
@@ -75,6 +74,11 @@ if __name__ == "__main__":
     # shared counter that checks the status of the running processes
     readyQueue = Array("i", len(jsonObj))
 
+    # shared counter that checks the status of the running Client processes
+    readyClients = Array("i", len([ proc for proc in jsonObj if proc['type'] =='bank']))
+    # shared counter that checks the status of the running Bank processes
+    readyBanks = Array("i", len([ proc for proc in jsonObj if proc['type'] =='client']))
+
     # get the process ID of the branches
     branches = list()
     for i in range(0, len(jsonObj)):
@@ -83,13 +87,11 @@ if __name__ == "__main__":
 
     # iterate the json file
     for i in range(0, len(jsonObj)):
-        # create the Bank process
+        # give the list of the processID of branches to the Bank process
         if jsonObj[i]['type'] == 'bank':
             jsonObj[i]['branches'] = branches
-            proc = Process(target=worker, args=(jsonObj[i], readyQueue))
-        # create the Client process
-        elif jsonObj[i]['type'] == 'client':
-            jsonObj[i]['branches'] = branches
-            proc = Process(target=worker, args=(jsonObj[i], readyQueue))
-        # initiate the process
+            
+        # initiate the process with the print_func and pass the arguments and the shared counter
+        proc = Process(target=worker,args=(jsonObj[i],readyQueue))
+        # start the function
         proc.start()

@@ -18,7 +18,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=b'\n\rexample.proto\")\n\x05\x45vent\x12\x11\n\tinterface\x18\x01 \x01(\t\x12\r\n\x05money\x18\x02 \x01(\x05\x32&\n\x03RPC\x12\x1f\n\x0bMsgDelivery\x12\x06.Event\x1a\x06.Event\"\x00\x62\x06proto3'
+  serialized_pb=b'\n\rexample.proto\"9\n\x05\x45vent\x12\x11\n\tinterface\x18\x01 \x01(\t\x12\r\n\x05money\x18\x02 \x01(\x05\x12\x0e\n\x06result\x18\x03 \x01(\t2&\n\x03RPC\x12\x1f\n\x0bMsgDelivery\x12\x06.Event\x1a\x06.Event\"\x00\x62\x06proto3'
 )
 
 
@@ -45,6 +45,13 @@ _EVENT = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='result', full_name='Event.result', index=2,
+      number=3, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -58,7 +65,7 @@ _EVENT = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=17,
-  serialized_end=58,
+  serialized_end=74,
 )
 
 DESCRIPTOR.message_types_by_name['Event'] = _EVENT
@@ -79,8 +86,8 @@ _RPC = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
-  serialized_start=60,
-  serialized_end=98,
+  serialized_start=76,
+  serialized_end=114,
   methods=[
   _descriptor.MethodDescriptor(
     name='MsgDelivery',

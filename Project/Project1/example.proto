@@ -3,6 +3,7 @@ syntax = "proto3";
 message Event {
   string interface = 1;
   int32 money = 2;
+  string result = 3;
 }
 
 service RPC {

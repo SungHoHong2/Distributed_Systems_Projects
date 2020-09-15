@@ -71,5 +71,5 @@ class Bank(example_pb2_grpc.RPCServicer):
             self.balance -= request.money
 
         # return the response back to the requested Process
-        response = example_pb2.Event(interface= request.interface + "_success!", money=request.money)
+        response = example_pb2.Event(interface= request.interface, money=self.balance, result="success")
         return response

@@ -5,6 +5,16 @@
     "events" :  [{"interface":"query", "money": 400 }]
   },
   {
+    "id" : 1,
+    "type" : "bank",
+    "balance" : 400
+  },
+  {
+    "id" : 2,
+    "type" : "client",
+    "events" :  [{"interface":"deposit", "money": 170 }]
+  },
+  {
     "id" : 2,
     "type" : "bank",
     "balance" : 400
@@ -12,20 +22,10 @@
   {
     "id" : 3,
     "type" : "client",
-    "events" :  [{"interface":"deposit", "money": 170 }]
-  },
-  {
-    "id" : 4,
-    "type" : "bank",
-    "balance" : 400
-  },
-  {
-    "id" : 5,
-    "type" : "client",
     "events" :  [{"interface":"withdraw", "money": 70 }]
   },
   {
-    "id" : 6,
+    "id" : 3,
     "type" : "bank",
     "balance" : 400
   }
