@@ -39,6 +39,7 @@ class Bank(example_pb2_grpc.RPCServicer):
 
         # TODO: Event_Receive
         if not('broadcast' in request.interface):
+            # self.clock += 1
             self.clock = max(self.clock, request.clock) + 1
             self.recvMsg.append({'id': request.id, 'name': request.interface + '_receive', 'clock': self.clock})
 

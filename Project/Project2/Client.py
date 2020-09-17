@@ -50,5 +50,6 @@ class Client:
                 rtnObj['money'] = response.money
 
             #TODO: Event_Return
+            # self.clock += 1
             self.clock = max(self.clock, response.clock) + 1
             self.recvMsg.append({'id': response.id, 'name': response.interface+'_return', 'clock' : self.clock })
