@@ -32,6 +32,11 @@ then
   cd Project/Project1/
   python3 -m grpc_tools.protoc -I. --python_out=. --grpc_python_out=. example.proto
 
+elif [ "$1" = "Project2" ]
+then
+  cd Project/Project2/
+  python3 -m grpc_tools.protoc -I. --python_out=. --grpc_python_out=. example.proto
+
 else
   echo "no argument"
 
