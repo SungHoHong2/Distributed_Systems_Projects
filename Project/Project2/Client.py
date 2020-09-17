@@ -24,12 +24,22 @@ class Client:
         # set the stub to the pointer
         self.stub = stub
 
+    # TODO: Student's implementation
+    def eventRequest(self,event):
+        self.clock += 1
+        self.recvMsg.append({'id': event['id'], 'name': event['interface'] + '_request', 'clock': self.clock})
+
+    # TODO: Student's implementation
+    def eventReturn(self,response):
+        self.clock = max(self.clock, response.clock) + 1
+        self.recvMsg.append({'id': response.id, 'name': response.interface + '_return', 'clock': self.clock})
+
     def executeEvents(self):
         # iterate the events
         for event in self.events:
-            #TODO: Event_Request
-            self.clock += 1
-            self.recvMsg.append({'id': event['id'], 'name': event['interface']+'_request', 'clock' : self.clock })
+
+            #TODO: Apply happen-before relationship
+            self.eventRequest(event)
 
             # if the event is query
             if event['interface'] == 'query':
@@ -49,7 +59,5 @@ class Client:
             if response.interface == 'query':
                 rtnObj['money'] = response.money
 
-            #TODO: Event_Return
-            # self.clock += 1
-            self.clock = max(self.clock, response.clock) + 1
-            self.recvMsg.append({'id': response.id, 'name': response.interface+'_return', 'clock' : self.clock })
+            #TODO: Apply happen-before relationship
+            self.eventReturn(response)

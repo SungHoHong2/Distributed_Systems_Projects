@@ -30,6 +30,22 @@ class Bank(example_pb2_grpc.RPCServicer):
                 self.stubList.append(stub)
 
 
+    # TODO: Student's implementation
+    def eventRecieve(self,request):
+        self.clock = max(self.clock, request.clock) + 1
+        self.recvMsg.append({'id': request.id, 'name': request.interface + '_receive', 'clock': self.clock})
+
+    # TODO: Student's implementation
+    def eventExecute(self,request):
+        self.clock += 1
+        self.recvMsg.append({'id': request.id, 'name': request.interface + '_execute', 'clock': self.clock})
+
+    # TODO: Student's implementation
+    def eventReply(self,request):
+        self.clock += 1
+        self.recvMsg.append({'id': request.id, 'name': request.interface + '_reply', 'clock': self.clock})
+
+
     def MsgDelivery(self,request, context):
         # record the received request
         eventRecord = {
@@ -37,11 +53,9 @@ class Bank(example_pb2_grpc.RPCServicer):
             'money' : request.money
         }
 
-        # TODO: Event_Receive
+        # TODO: Apply happen-before relationship
         if not('broadcast' in request.interface):
-            # self.clock += 1
-            self.clock = max(self.clock, request.clock) + 1
-            self.recvMsg.append({'id': request.id, 'name': request.interface + '_receive', 'clock': self.clock})
+            self.eventRecieve(request)
 
         # if the request is a query from the Client
         if request.interface == 'query':
@@ -77,15 +91,10 @@ class Bank(example_pb2_grpc.RPCServicer):
             # decrease the requested amount to the replica
             self.balance -= request.money
 
-        # TODO: Event_Execute
+        # TODO: Apply happen-before relationship
         if not('broadcast' in request.interface):
-            self.clock += 1
-            self.recvMsg.append({'id': request.id, 'name': request.interface + '_execute', 'clock': self.clock})
-
-        # TODO: Event_Reply
-        if not('broadcast' in request.interface):
-            self.clock += 1
-            self.recvMsg.append({'id': request.id, 'name': request.interface + '_reply', 'clock': self.clock})
+            self.eventExecute(request)
+            self.eventReply(request)
 
         # return the response back to the requested Process
         response = example_pb2.Event(id=request.id,interface=request.interface,money=self.balance,clock=self.clock,result="success")
