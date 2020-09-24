@@ -15,8 +15,11 @@ The ultimate goal of the three projects is to create a marketplace where indepen
 - ### Logical Clock 
     - [benchmark for logical clock](lamportBenchmark) 
     - [implementation of logical clock for independent processes](lamportClocks)
-    
-    
+    - [Reference](https://mwhittaker.github.io/blog/lamports_logical_clocks/)
+        - [implmentation](https://github.com/mwhittaker/clocks)
+       
+
+        
     
     
 

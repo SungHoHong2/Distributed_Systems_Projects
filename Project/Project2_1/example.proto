@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+message Event {
+  string interface = 1;
+  int32 money = 2;
+  string result = 3;
+  int32 id = 4;
+  int32 clock = 5;
+}
+
+service RPC {
+    rpc MsgDelivery(Event) returns (Event) {}
+}
